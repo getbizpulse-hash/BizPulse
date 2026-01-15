@@ -6,3 +6,12 @@ data/uploads/*
 .streamlit/secrets.toml
 venv/
 .env
+
+# macOS
+.DS_Store
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
