@@ -1,0 +1,321 @@
+import React, { useState } from 'react';
+import { 
+  TrendingUp, 
+  TrendingDown,
+  Users, 
+  Target, 
+  CheckCircle2, 
+  AlertCircle, 
+  Database, 
+  LayoutDashboard, 
+  UserCircle,
+  BarChart3,
+  MessageSquare,
+  Zap,
+  ChevronDown,
+  Sparkles,
+  DollarSign,
+  Download,
+  LogOut,
+  Mail,
+  CalendarDays,
+  ArrowRight
+} from 'lucide-react';
+
+// --- Boutique Customer Data (Mapped from Barefoot Care Report) ---
+const SEGMENTS = [
+  { name: 'Trialing', count: 166, revenue: 24270, color: 'text-blue-600 bg-blue-50', border: 'border-blue-100', trend: '+5%', desc: 'First/second visits. Conversion priority.' },
+  { name: 'Core Base', count: 87, revenue: 49130, color: 'text-indigo-600 bg-indigo-50', border: 'border-indigo-100', trend: '+12%', desc: 'Regular visitors. Your primary stability.' },
+  { name: 'Loyalists', count: 16, revenue: 18770, color: 'text-emerald-600 bg-emerald-50', border: 'border-emerald-100', trend: 'Stable', desc: 'Monthly foot care subscribers.' },
+  { name: 'Ambassadors', count: 2, revenue: 2270, color: 'text-rose-600 bg-rose-50', border: 'border-rose-100', trend: 'High Value', desc: 'Elite clients driving referrals.' },
+];
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [completedActions, setCompletedActions] = useState(new Set());
+
+  const toggleAction = (id) => {
+    const next = new Set(completedActions);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setCompletedActions(next);
+  };
+
+  const TopBar = () => (
+    <header className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-[60] flex items-center justify-between px-8">
+      <div className="flex items-center gap-10">
+        <div className="flex items-center gap-2.5 group cursor-pointer" onClick={() => setActiveTab('home')}>
+          <div className="w-9 h-9 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-xl shadow-slate-200 group-hover:bg-indigo-600 transition-all duration-500 rotate-3 group-hover:rotate-0">
+            <Zap size={18} fill="currentColor" />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-slate-900">BizPulse</span>
+        </div>
+        
+        <div className="hidden lg:flex items-center gap-4 pl-10 border-l border-slate-200">
+          <div className="flex flex-col">
+            <h1 className="text-sm font-bold text-slate-800 tracking-tight leading-none mb-1">Barefoot Care</h1>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.15em]">Live Intelligence</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <button className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 rounded-full text-xs font-bold transition-all border border-slate-200 shadow-sm hover:shadow-md active:scale-95">
+          <Download size={14} className="text-slate-400" />
+          <span>Export Summary</span>
+        </button>
+        
+        <div className="h-8 w-[1px] bg-slate-200 mx-2 hidden sm:block"></div>
+        
+        <div className="flex items-center gap-2">
+          <button className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+            <UserCircle size={20} />
+          </button>
+          <button className="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all">
+            <LogOut size={18} />
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+
+  const HomeView = () => (
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+      {/* Hero: Contextual Narrative */}
+      <section className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-rose-500/5 blur-3xl rounded-[3rem] -z-10"></div>
+        <div className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] p-10 border border-white/60 shadow-2xl shadow-slate-200/50">
+          <div className="flex flex-col lg:flex-row gap-12 items-start lg:items-center">
+            <div className="flex-1 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/80 rounded-full border border-slate-100 shadow-sm">
+                <Sparkles size={12} className="text-amber-500" />
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Morning Brief • Jan 16</span>
+              </div>
+              <h2 className="text-5xl font-bold tracking-tighter text-slate-900 leading-[1.1]">
+                Your community <br/><span className="text-indigo-600">is expanding.</span>
+              </h2>
+              <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-lg">
+                Victoria, the boutique's "Loyalty Health" is at a record high of 82%. However, there's a 
+                <span className="text-slate-900 font-bold"> $4,250 silent leak</span> in re-bookings from last month.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full lg:w-auto">
+              <div className="p-8 bg-slate-900 rounded-[2rem] text-white shadow-2xl shadow-indigo-200 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/20 blur-2xl group-hover:bg-indigo-500/40 transition-all"></div>
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-2 block">Inactive Revenue</span>
+                <span className="text-4xl font-black tracking-tight">$4,250</span>
+                <div className="mt-4 flex items-center gap-2 text-rose-400 text-xs font-bold">
+                  <TrendingDown size={14} /> From 4 key clients
+                </div>
+              </div>
+              <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/50">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Local Reach</span>
+                <span className="text-4xl font-black tracking-tight text-slate-900">575</span>
+                <p className="mt-4 text-xs font-bold text-slate-400 italic">High-fit neighbors unreached</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Asymmetric Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="lg:col-span-3 bg-white p-8 rounded-[2rem] border border-slate-100/80 shadow-sm hover:shadow-md transition-all group">
+          <div className="flex items-center gap-4 mb-6">
+             <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl transition-transform group-hover:scale-110"><TrendingUp size={22} /></div>
+             <h4 className="font-bold text-slate-800">New Client Momentum</h4>
+          </div>
+          <p className="text-slate-500 font-medium leading-relaxed">
+            The meticulous "Russian Pedicure" branding is working. First-time visitors are converting to a second visit at a <span className="text-emerald-600 font-bold">12% higher rate</span> than last quarter. 
+          </p>
+          <div className="mt-6 flex items-center gap-2 text-xs font-bold text-indigo-600 cursor-pointer hover:gap-3 transition-all" onClick={() => setActiveTab('customers')}>
+            See cohort breakdown <ArrowRight size={14} />
+          </div>
+        </div>
+        
+        <div className="lg:col-span-2 bg-indigo-600 p-8 rounded-[2rem] text-white shadow-xl shadow-indigo-200/50 group overflow-hidden relative">
+          <Users className="absolute -bottom-4 -right-4 w-32 h-32 text-indigo-500/30 rotate-12" />
+          <h4 className="font-bold mb-4 relative z-10">Client Concentration</h4>
+          <p className="text-indigo-100 text-sm leading-relaxed relative z-10">
+            4 of your high-frequency Regulars haven't booked their monthly cycle. This is a rare anomaly in your pattern.
+          </p>
+          <button className="mt-6 px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-xs font-bold transition-all backdrop-blur-md border border-white/20 relative z-10" onClick={() => setActiveTab('actions')}>
+            Fix This
+          </button>
+        </div>
+      </div>
+
+      {/* Recommended Playbook */}
+      <section>
+        <div className="flex items-end justify-between mb-8 px-2">
+          <div>
+            <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Consultant's Playbook</h3>
+            <p className="text-slate-400 text-sm font-medium mt-1">Personalized strategy based on current demand</p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <BoutiqueActionCard 
+            id="at_risk"
+            title="Secure $850 in 'At-Risk' VIP Fees"
+            tag="Urgent"
+            desc="Four monthly loyalists are currently off-cycle. A personal check-in from you usually results in an immediate booking."
+            template="Hi {name}, I noticed your monthly cycle has slipped! I've saved a few morning slots for next week just for you. Shall I pencil you in?"
+            isCompleted={completedActions.has('at_risk')}
+            onToggle={() => toggleAction('at_risk')}
+          />
+          <BoutiqueActionCard 
+            id="standing"
+            title="Convert 'Heavy' Casuals to Standing Appointments"
+            tag="Growth"
+            desc="12 clients have visited 6+ times. Moving them to a standing monthly schedule stabilizes your calendar."
+            template="You're becoming one of my favorites! Would you like to lock in a monthly time so you never have to worry about finding a slot?"
+            isCompleted={completedActions.has('standing')}
+            onToggle={() => toggleAction('standing')}
+          />
+        </div>
+      </section>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#FBFBFC] text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+      <TopBar />
+
+      <aside className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-slate-200/60 px-6 md:top-16 md:bottom-0 md:w-24 md:border-t-0 md:border-r flex md:flex-col items-center justify-around md:justify-center gap-12 py-6">
+        <NavIcon active={activeTab === 'home'} onClick={() => setActiveTab('home')} icon={<LayoutDashboard size={22} />} label="Focus" />
+        <NavIcon active={activeTab === 'actions'} onClick={() => setActiveTab('actions')} icon={<Target size={22} />} label="Playbook" />
+        <NavIcon active={activeTab === 'customers'} onClick={() => setActiveTab('customers')} icon={<Users size={22} />} label="Clients" />
+        <NavIcon active={activeTab === 'data'} onClick={() => setActiveTab('data')} icon={<Database size={22} />} label="Systems" />
+      </aside>
+
+      <main className="pt-28 pb-32 px-6 md:pl-32 md:pt-36 max-w-6xl mx-auto">
+        {activeTab === 'home' && <HomeView />}
+        {activeTab === 'customers' && <ClientsOverview />}
+        {activeTab === 'actions' && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <div className="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm text-center">
+                <Target className="mx-auto text-indigo-600 mb-6" size={48} />
+                <h2 className="text-2xl font-bold mb-2">Growth Strategy Active</h2>
+                <p className="text-slate-400 text-sm max-w-sm mx-auto mb-8">Execute your personalized prescriptions below to unlock $5,100 in estimated monthly value.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
+                    {/* Reuse Action Cards in a dedicated view if needed */}
+                </div>
+             </div>
+          </div>
+        )}
+        {activeTab === 'data' && (
+          <div className="flex flex-col items-center justify-center p-20 bg-white rounded-[3rem] border border-slate-100 shadow-sm text-center">
+            <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-200 mb-6">
+              <Database size={40} />
+            </div>
+            <h2 className="text-xl font-bold mb-2">System Integrity</h2>
+            <p className="text-slate-400 text-sm max-w-xs mb-8">Your Square data is flowing perfectly into BizPulse. Last heartbeat 12 minutes ago.</p>
+            <button className="px-8 py-3.5 bg-slate-900 text-white rounded-2xl text-xs font-bold uppercase tracking-widest shadow-xl shadow-slate-200 hover:scale-105 transition-all">Manual Sync</button>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+};
+
+// --- Boutique Sub-components ---
+
+const ClientsOverview = () => (
+  <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {SEGMENTS.map(s => (
+        <div key={s.name} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+          <div className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full inline-block mb-6 ${s.color}`}>
+            {s.name}
+          </div>
+          <div className="text-4xl font-black text-slate-900 mb-1">{s.count}</div>
+          <p className="text-xs text-slate-400 font-medium mb-6 leading-relaxed">{s.desc}</p>
+          <div className="pt-5 border-t border-slate-50 flex justify-between items-center">
+            <span className="text-sm font-bold text-slate-700">${s.revenue.toLocaleString()}</span>
+            <span className={`text-[10px] font-bold ${s.trend.includes('+') ? 'text-emerald-500' : 'text-slate-300'}`}>{s.trend}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div className="bg-white p-8 rounded-[3rem] border border-slate-100/60 shadow-sm">
+        <div className="flex items-center gap-4 mb-8">
+            <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl"><BarChart3 size={20} /></div>
+            <h3 className="text-xl font-bold">Loyalty Depth</h3>
+        </div>
+        <div className="h-64 flex items-end justify-around gap-8 px-4">
+            {SEGMENTS.map(s => (
+                <div key={s.name} className="flex-1 flex flex-col items-center group">
+                    <div className="w-full bg-slate-100 rounded-2xl relative overflow-hidden h-full">
+                        <div 
+                          className="absolute bottom-0 left-0 right-0 bg-indigo-500 rounded-2xl transition-all duration-1000 group-hover:bg-indigo-600"
+                          style={{ height: `${(s.revenue / 50000) * 100}%` }}
+                        ></div>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 mt-4 uppercase tracking-widest">{s.name}</span>
+                </div>
+            ))}
+        </div>
+    </div>
+  </div>
+);
+
+const NavIcon = ({ active, icon, onClick, label }) => (
+  <button 
+    onClick={onClick}
+    className={`flex flex-col items-center gap-2 transition-all duration-500 group ${active ? 'text-indigo-600' : 'text-slate-300 hover:text-slate-500'}`}
+  >
+    <div className={`p-3 rounded-2xl transition-all duration-500 ${active ? 'bg-indigo-50 shadow-lg shadow-indigo-100' : 'bg-transparent group-hover:bg-slate-50'}`}>
+      {icon}
+    </div>
+    <span className="text-[9px] font-bold uppercase tracking-widest">{label}</span>
+  </button>
+);
+
+const BoutiqueActionCard = ({ title, tag, desc, template, isCompleted, onToggle }) => (
+  <div className={`relative bg-white rounded-[2.5rem] border transition-all duration-700 p-8 ${isCompleted ? 'border-emerald-100 bg-emerald-50/10 grayscale' : 'border-slate-100 shadow-sm hover:shadow-2xl hover:border-indigo-100'}`}>
+    <div className="flex gap-6">
+      <button 
+        onClick={onToggle}
+        className={`shrink-0 w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-200 text-transparent hover:border-slate-400'}`}
+      >
+        <CheckCircle2 size={16} />
+      </button>
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <h4 className={`text-xl font-bold tracking-tight ${isCompleted ? 'line-through text-slate-300' : 'text-slate-900'}`}>{title}</h4>
+            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-widest ${isCompleted ? 'bg-slate-100 text-slate-400' : 'bg-slate-900 text-white'}`}>{tag}</span>
+          </div>
+          <p className="text-slate-500 text-sm font-medium leading-relaxed">{desc}</p>
+        </div>
+
+        {!isCompleted && (
+          <div className="space-y-6 pt-2">
+            <div className="bg-[#FBFBFC] p-5 rounded-2xl border border-slate-100 relative group/msg">
+               <div className="flex items-center gap-2 mb-3 text-slate-400">
+                  <Mail size={12} />
+                  <span className="text-[9px] font-bold uppercase tracking-widest">Suggested Draft</span>
+               </div>
+               <p className="text-sm text-slate-700 font-bold italic leading-relaxed">"{template}"</p>
+               <button className="absolute top-4 right-4 text-indigo-600 opacity-0 group-hover/msg:opacity-100 transition-opacity">
+                  <MessageSquare size={14} />
+               </button>
+            </div>
+            <div className="flex gap-3">
+               <button className="px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">Personalize & Send</button>
+               <button className="px-6 py-3 bg-white border border-slate-200 text-slate-500 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all">View Names</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+export default App;

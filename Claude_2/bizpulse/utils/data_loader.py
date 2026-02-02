@@ -65,10 +65,17 @@ def load_and_process_csv(uploaded_file) -> pd.DataFrame:
     df["start"] = pd.to_datetime(df["start"], format="%m-%d-%Y %I:%M:%S %p", errors="coerce")
 
     # Estimate prices if not present
+    # Estimate prices if not present
     if "estimated_total_price" not in df.columns or df["estimated_total_price"].isna().all():
         df["estimated_price"] = df["service"].apply(estimate_price)
     else:
-        df["estimated_price"] = pd.to_numeric(df["estimated_total_price"], errors="coerce")
+        # Clean currency strings if present
+        if df["estimated_total_price"].dtype == 'object':
+            df["estimated_price"] = df["estimated_total_price"].astype(str).str.replace('$', '', regex=False).str.replace(',', '', regex=False)
+            df["estimated_price"] = pd.to_numeric(df["estimated_price"], errors="coerce")
+        else:
+            df["estimated_price"] = pd.to_numeric(df["estimated_total_price"], errors="coerce")
+            
         df["estimated_price"] = df["estimated_price"].fillna(df["service"].apply(estimate_price))
 
     # Extract email and phone if present
@@ -88,16 +95,23 @@ def aggregate_to_customers(df: pd.DataFrame, start_date=None, end_date=None) -> 
     if end_date:
         df = df[df["start"] <= pd.to_datetime(end_date)]
 
+    # Define aggregation dictionary
+    agg_dict = {
+        "frequency": ("start", "count"),
+        "recency": ("start", "max"),
+        "first_visit": ("start", "min"),
+        "total_spend": ("estimated_price", "sum"),
+        "avg_spend": ("estimated_price", "mean"),
+    }
+    
+    # Add optional columns if they exist
+    if "email" in df.columns:
+        agg_dict["email"] = ("email", "first")
+    if "phone" in df.columns:
+        agg_dict["phone"] = ("phone", "first")
+
     # Aggregate by customer
-    customer_df = df.groupby("client_name").agg(
-        frequency=("start", "count"),
-        recency=("start", "max"),
-        first_visit=("start", "min"),
-        total_spend=("estimated_price", "sum"),
-        avg_spend=("estimated_price", "mean"),
-        email=("email", "first"),
-        phone=("phone", "first"),
-    ).reset_index()
+    customer_df = df.groupby("client_name").agg(**agg_dict).reset_index()
 
     # Calculate days since last visit
     today = pd.Timestamp.now()
