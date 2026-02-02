@@ -4,3 +4,4 @@ plotly>=5.18.0
 lifetimes>=0.11.3
 numpy>=1.24.0
 scipy>=1.11.0
+reportlab>=3.6.0
