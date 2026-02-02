@@ -19,7 +19,13 @@ BORDER_COLOR = colors.HexColor("#E8EAED")
 
 # --- PLOTTING HELPERS ---
 def get_plot_style():
-    plt.style.use('seaborn-whitegrid')
+    # Use seaborn-v0_8-whitegrid for matplotlib 3.6+ compatibility
+    # Falls back to default if style not available
+    try:
+        plt.style.use('seaborn-v0_8-whitegrid')
+    except:
+        plt.style.use('default')
+    
     plt.rcParams.update({
         'font.family': 'sans-serif',
         'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
@@ -31,7 +37,11 @@ def get_plot_style():
         'axes.spines.right': False,
         'axes.spines.left': False,
         'axes.edgecolor': '#E0E0E0',
+        'axes.facecolor': 'white',
+        'axes.grid': True,
         'grid.color': '#F0F0F0',
+        'grid.linestyle': '-',
+        'grid.linewidth': 0.5,
         'text.color': '#333333',
     })
 
